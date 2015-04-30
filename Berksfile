@@ -2,4 +2,4 @@ source "https://supermarket.getchef.com"
 
 metadata
 
-cookbook 'rabbitmq', '~> 3.8.0'
+cookbook 'rabbitmq', '~> 4.0.0'
