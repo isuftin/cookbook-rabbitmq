@@ -6,6 +6,7 @@ Recipe assumes a databag encryption key has been placed on the OS. See attribute
 
 Example credentials databag:
 {
+	"id" : "cida_rabbitmq_credentials",
 	"username" : "username",
 	"password" : "password
 }
