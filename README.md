@@ -14,3 +14,7 @@ Example credentials databag:
 Example databag creation:
 knife data bag create yournewdatabagname
 knife data bag from file yournewdatabagname yourdatabagejsonfile.json --secret-file yourencryptionkeyfile
+
+On Chef server, be sure to set an environment which overrides these defaults:
+cida_rabbitmq_credentials_databag_name - name of the databag which contains info above
+cida_rabbitmq_databag_encryption_key - location of the encryption key on the target instance
