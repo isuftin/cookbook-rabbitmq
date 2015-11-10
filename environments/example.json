@@ -1,0 +1,14 @@
+{
+	"name": "rabbitmq",
+	"default_attributes": {
+		"cida_rabbitmq" : {
+			"credentials_databag_name" : "a_credentials_databag_name",
+			"databag_encryption_key" : "/etc/chef/databag-encryption-key",
+			"databag_username_field" : "username",
+			"databag_password_field" : "password"
+		}
+	},
+	"json_class": "Chef::Environment",
+	"description": "Rserve settings",
+	"chef_type": "environment"
+}

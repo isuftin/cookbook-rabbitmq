@@ -11,11 +11,14 @@ iptables_rule 'rabbitmq_ports' do
   action :enable
 end
 
-databag_name = node['cida_rabbitmq_credentials_databag_name']
-encryption_key_path = node['cida_rabbitmq_databag_encryption_key']
-credential_databag = data_bag_item(databag_name, 'cida_rabbitmq_credentials', IO.read(encryption_key_path))
-username = credential_databag['username']
-pass = credential_databag['password']
+databag_name = node['cida_rabbitmq']['credentials_databag_name']
+encryption_key_path = node['cida_rabbitmq']['databag_encryption_key']
+databag_username_field = node['cida_rabbitmq']['databag_username_field']
+databag_password_field = node['cida_rabbitmq']['databag_password_field']
+
+credential_databag = data_bag_item(databag_name, databag_name, IO.read(encryption_key_path))
+username = credential_databag[databag_username_field]
+pass = credential_databag[databag_password_field]
 
 rabbitmq_user "guest" do
   action :delete
