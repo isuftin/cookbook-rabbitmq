@@ -1,6 +1,6 @@
 {
 	"name": "rabbitmq",
-	"default_attributes": {
+	"override_attributes": {
 		"cida_rabbitmq" : {
 			"credentials_databag_name" : "a_credentials_databag_name",
 			"databag_encryption_key" : "/etc/chef/databag-encryption-key",
