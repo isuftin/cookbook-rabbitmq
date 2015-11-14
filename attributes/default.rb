@@ -1,8 +1,8 @@
 default["cida_rabbitmq"] = {
-  "credentials_databag_name" => "cida_rabbitmq_credentials",
-  "databag_encryption_key" => "/etc/chef/databag-encryption-key",
-  "databag_username_field" => "username",
-  "databag_password_field" => "password"
+  "credentials_data_bag_name" => "cida_rabbitmq_credentials",
+  "data_bag_encryption_key" => "/etc/chef/data_bag-encryption-key",
+  "data_bag_username_field" => "username",
+  "data_bag_password_field" => "password"
 }
 
 default["rabbitmq"]["loopback_users"] = []
