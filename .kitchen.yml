@@ -20,6 +20,6 @@ suites:
       - ["forwarded_port", {guest: 15672, host: 15672}] # Management Console
     encrypted_data_bag_secret_key_path: 'test/integration/default/encrypted_data_bag_secret'
     run_list:
-      - recipe[cida::cida_rabbitmq]
-      - recipe[cida::mgmt_console]
+      - recipe[cida_rabbitmq::default]
+      - recipe[cida_rabbitmq::mgmt_console]
     attributes:
