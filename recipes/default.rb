@@ -12,11 +12,12 @@ iptables_rule 'rabbitmq_ports' do
 end
 
 data_bag_name = node['cida_rabbitmq']['credentials_data_bag_name']
+data_bag_item = node['cida_rabbitmq']['credentials_data_bag_item']
 encryption_key_path = node['cida_rabbitmq']['data_bag_encryption_key']
 data_bag_username_field = node['cida_rabbitmq']['data_bag_username_field']
 data_bag_password_field = node['cida_rabbitmq']['data_bag_password_field']
 
-credential_data_bag = data_bag_item(data_bag_name, data_bag_name, IO.read(encryption_key_path))
+credential_data_bag = data_bag_item(data_bag_name, data_bag_item, IO.read(encryption_key_path))
 username = credential_data_bag[data_bag_username_field]
 pass = credential_data_bag[data_bag_password_field]
 
