@@ -4,30 +4,22 @@ driver:
 
 provisioner:
   name: chef_zero
+  data_bags_path: 'test/integration/default/data_bags/'
+  environments_path: 'test/integration/default/environments'
+  client_rb:
+    environment: rabbitmq
 
 platforms:
-  - name: centos-6.6-vbox
-    driver:
-      box: chef/centos-6.6
-      box_url: chef/centos-6.6
-      provider: virtualbox
-  - name: centos-6.6-vmware
-    driver:
-      box: chef/centos-6.6
-      box_url: chef/centos-6.6
-      provider: vmware_fusion
+  - name: centos-6.6
 
 suites:
   - name: default
+    data_bags_path: 'test/integration/default/data_bags/'
     network:
       - ["forwarded_port", {guest: 5672, host: 5672}] # RabbitMQ Port
       - ["forwarded_port", {guest: 15672, host: 15672}] # Management Console
-    run_list:
-      - recipe[cida_rabbitmq::mgmt_console]
-    attributes:
-  - name: no_mgmt_console
-    network:
-      - ["forwarded_port", {guest: 5672, host: 5672}] # RabbitMQ Port
+    encrypted_data_bag_secret_key_path: 'test/integration/default/encrypted_data_bag_secret'
     run_list:
       - recipe[cida_rabbitmq::default]
+      - recipe[cida_rabbitmq::mgmt_console]
     attributes:

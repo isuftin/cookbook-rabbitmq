@@ -2,13 +2,14 @@
 	"name": "rabbitmq",
 	"override_attributes": {
 		"cida_rabbitmq" : {
-			"credentials_data_bag_name" : "a_credentials_data_bag_name",
-			"data_bag_encryption_key" : "/etc/chef/data-bag-encryption-key",
+			"credentials_data_bag_name" : "development",
+			"credentials_data_bag_item" : "rabbitmq-credentials",
+			"data_bag_encryption_key" : "/tmp/kitchen/encrypted_data_bag_secret",
 			"data_bag_username_field" : "username",
 			"data_bag_password_field" : "password"
 		}
 	},
 	"json_class": "Chef::Environment",
-	"description": "Rserve settings",
+	"description": "RabbitMQ settings",
 	"chef_type": "environment"
 }
