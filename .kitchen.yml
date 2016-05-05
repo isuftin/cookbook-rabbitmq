@@ -1,25 +1,46 @@
 ---
 driver:
   name: vagrant
+  network:
+  - ["forwarded_port", {guest: 5672, host: 5672, auto_correct: true}] # RabbitMQ
+  - ["forwarded_port", {guest: 15672, host: 15672, auto_correct: true}] # RabbitMQ
 
 provisioner:
   name: chef_zero
-  data_bags_path: 'test/integration/default/data_bags/'
-  environments_path: 'test/integration/default/environments'
-  client_rb:
-    environment: rabbitmq
 
 platforms:
-  - name: centos-6.6
+  - name: centos-6.7-vbox
+    driver:
+      box: bento/centos-6.7
+      box_url: bento/centos-6.7
+      provider: virtualbox
+  - name: centos-6.7-vmware
+    driver:
+      box: bento/centos-6.7
+      box_url: bento/centos-6.7
+      provider: vmware_fusion
+  - name:  ubuntu-trusty-vbox
+    driver:
+      box: ubuntu/trusty64
+      box_url: ubuntu/trusty64
+      provider: virtualbox
 
 suites:
   - name: default
     data_bags_path: 'test/integration/default/data_bags/'
-    network:
-      - ["forwarded_port", {guest: 5672, host: 5672}] # RabbitMQ Port
-      - ["forwarded_port", {guest: 15672, host: 15672}] # Management Console
     encrypted_data_bag_secret_key_path: 'test/integration/default/encrypted_data_bag_secret'
     run_list:
-      - recipe[cida_rabbitmq::default]
-      - recipe[cida_rabbitmq::mgmt_console]
-    attributes:
+      - recipe[iptables]
+      - recipe[rabbitmq]
+      - recipe[cida_rabbitmq::create_users]
+      - recipe[rabbitmq::user_management]
+      - recipe[rabbitmq::mgmt_console]
+      - recipe[cida_rabbitmq::rabbitmq_iptables]
+    attributes: {
+      "rabbitmq" : {
+        "use_distro_version" : true,
+        "disabled_users" : "guest",
+        "enabled_users" : [],
+        "loopback_users" : []
+      }
+    }
