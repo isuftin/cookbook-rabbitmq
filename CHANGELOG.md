@@ -1,6 +1,10 @@
 ## Changelog
 ---------
 
+- 0.1.5
+  -----
+  - [isuftin@usgs.gov] - Fixed a breaking spelling error in the default recipe
+
 - 0.1.4
   -----
   - [isuftin@usgs.gov] - Refactored .kitchen.yml to include more images, generalize ports and attributes, etc 
