@@ -39,7 +39,7 @@ suites:
     attributes: {
       "rabbitmq" : {
         "use_distro_version" : true,
-        "disabled_users" : "guest",
+        "disabled_users" : ["guest"],
         "enabled_users" : [],
         "loopback_users" : []
       }
