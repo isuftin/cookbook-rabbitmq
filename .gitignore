@@ -17,3 +17,5 @@ bin/*
 /.project
 /Gemfile
 /Thorfile
+
+.DS_Store

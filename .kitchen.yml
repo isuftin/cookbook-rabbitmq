@@ -1,46 +1,58 @@
 ---
 driver:
   name: vagrant
-  network:
-  - ["forwarded_port", {guest: 5672, host: 5672, auto_correct: true}] # RabbitMQ
-  - ["forwarded_port", {guest: 15672, host: 15672, auto_correct: true}] # RabbitMQ
+  provision: true
 
 provisioner:
-  name: chef_zero
+  product_name: chef
+
+verifier:
+  name: inspec
 
 platforms:
-  - name: centos-6.7-vbox
-    driver:
-      box: bento/centos-6.7
-      box_url: bento/centos-6.7
-      provider: virtualbox
-  - name: centos-6.7-vmware
-    driver:
-      box: bento/centos-6.7
-      box_url: bento/centos-6.7
-      provider: vmware_fusion
-  - name:  ubuntu-trusty-vbox
-    driver:
-      box: ubuntu/trusty64
-      box_url: ubuntu/trusty64
-      provider: virtualbox
+  - name: centos-6
+  - name: centos-7
 
 suites:
   - name: default
     data_bags_path: 'test/integration/default/data_bags/'
     encrypted_data_bag_secret_key_path: 'test/integration/default/encrypted_data_bag_secret'
     run_list:
-      - recipe[iptables]
       - recipe[rabbitmq]
+      - recipe[rabbitmq::plugin_management]
       - recipe[cida_rabbitmq::create_users]
-      - recipe[rabbitmq::user_management]
       - recipe[rabbitmq::mgmt_console]
-      - recipe[cida_rabbitmq::rabbitmq_iptables]
     attributes: {
       "rabbitmq" : {
-        "use_distro_version" : true,
-        "disabled_users" : ["guest"],
-        "enabled_users" : [],
-        "loopback_users" : []
+        "version" : "3.7.3",
+        "enabled_plugins" : [],
+        "disabled_plugins" : [],
+        "enabled_users" : [
+          {
+            "name" : "admin",
+            "tag" : "administrator",
+            "rights" : [
+              {
+                "conf" : ".*",
+                "write" : ".*",
+                "read" : ".*"
+              }
+            ]
+          }
+        ],
+        "disabled_users" : [ "guest" ]
+      },
+      "erlang" : {
+          "install_method" : "esl",
+          "esl" : {
+            "version" : "19.3.6-1"
+            }
       }
     }
+    driver:
+      vm_hostname: default
+      network:
+      - ["private_network", {ip: "dhcp"}]
+      - ["forwarded_port", {guest: 5672, host: 5672, auto_correct: true}] # RabbitMQ
+      - ["forwarded_port", {guest: 15672, host: 15672, auto_correct: true}] # RabbitMQ
+      - ["forwarded_port", {guest: 25672, host: 25672, auto_correct: true}] # RabbitMQ

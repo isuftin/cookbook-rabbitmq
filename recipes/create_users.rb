@@ -3,31 +3,37 @@
 # Recipe:: create_users
 # Author: Ivan Suftin < isuftin@usgs.gov >
 # Description: Creates the user(s) needed for RabbitMQ function
-
-data_bag_name = node['cida_rabbitmq']['credentials_data_bag_name']
-data_bag_item = node['cida_rabbitmq']['credentials_data_bag_item']
-data_bag_username_field = node['cida_rabbitmq']['data_bag_username_field']
-data_bag_password_field = node['cida_rabbitmq']['data_bag_password_field']
-
+rabbit_attributes = node['cida_rabbitmq']
+data_bag_name = rabbit_attributes['credentials_data_bag_name']
+data_bag_item = rabbit_attributes['credentials_data_bag_item']
+data_bag_users_field = rabbit_attributes['data_bag_users_field']
 credential_data_bag = data_bag_item(data_bag_name, data_bag_item)
-username = credential_data_bag[data_bag_username_field]
-pass = credential_data_bag[data_bag_password_field]
+users = credential_data_bag[data_bag_users_field]
 
-rabbitmq_user "guest" do
-  action :delete
+include_recipe 'rabbitmq::default'
+include_recipe 'rabbitmq::virtualhost_management'
+
+node['rabbitmq']['enabled_users'].each do |user|
+  next unless users.key?(user['name'])
+  rabbitmq_user user['name'] do
+    password users[user['name']]
+    action :add
+  end
+  rabbitmq_user user['name'] do
+    tag user['tag']
+    action :set_tags
+  end
+  user['rights'].each do |r|
+    rabbitmq_user user['name'] do
+      vhost r['vhost']
+      permissions "#{r['conf']} #{r['write']} #{r['read']}"
+      action :set_permissions
+    end
+  end
 end
 
-rabbitmq_user username do
-  password pass
-  action :add
-end
-
-rabbitmq_user username do
-  permissions ".* .* .*"
-  action :set_permissions
-end
-
-rabbitmq_user username do
-  tag "administrator"
-  action :set_tags
+node['rabbitmq']['disabled_users'].each do |user|
+  rabbitmq_user user do
+    action :delete
+  end
 end
