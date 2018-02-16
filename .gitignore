@@ -15,7 +15,5 @@ bin/*
 .kitchen/
 .kitchen.local.yml
 /.project
-/Gemfile
-/Thorfile
 
 .DS_Store
